@@ -58,7 +58,7 @@ struct DB* _readDB() {
   return db;
 }
 
-struct DB* _updateDBwithKVs(struct DB *db, struct KV *kvs[], int size) {
+void _updateDBwithKVs(struct DB *db, struct KV *kvs[], int size) {
   db->size += size;
 
   for (int i = 0; i < size; i++) {
@@ -99,11 +99,9 @@ struct DB* _updateDBwithKVs(struct DB *db, struct KV *kvs[], int size) {
       }
     }
   }
-
-  return db;
 }
 
-struct DB * _deleteKeyFromDB(struct DB *db, int key) {
+void _deleteKeyFromDB(struct DB *db, int key) {
   struct KV *current = db->first;
   while (current != NULL && current->key < key) {
       current = current->next;
@@ -121,7 +119,6 @@ struct DB * _deleteKeyFromDB(struct DB *db, int key) {
       current->next->previous = current->previous;
     free(current);
   }
-  return db;
 }
 
 void _writeDB(struct DB *db) {
@@ -139,7 +136,7 @@ void _writeDB(struct DB *db) {
 
 void save(struct KV *kvs[], int size) {
   struct DB *db = _readDB();
-  db = _updateDBwithKVs(db, kvs, size);
+  _updateDBwithKVs(db, kvs, size);
   _writeDB(db);
 }
 
@@ -160,7 +157,7 @@ void get(int key) {
 void delete(int key) {
   struct DB *db = _readDB();
   int originalSize = db->size;
-  db = _deleteKeyFromDB(db, key);
+  _deleteKeyFromDB(db, key);
   if (db->size == originalSize)
     printf("%d not found\n", key);
   else
