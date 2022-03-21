@@ -13,16 +13,16 @@ run_test () {
     # pre: execute this after before the test is done, to set up
     local prefile=$testdir/$testnum.pre
     if [[ -f $prefile ]]; then
-	eval $(cat $prefile)
-	if (( $verbose == 1 )); then
-	    echo -n "pre-test:  "
-	    cat $prefile
-	fi
+        eval $(cat $prefile)
+        if (( $verbose == 1 )); then
+            echo -n "pre-test:  "
+            cat $prefile
+        fi
     fi
     local testfile=$testdir/$testnum.run
     if (( $verbose == 1 )); then
-	echo -n "test:      "
-	cat $testfile
+        echo -n "test:      "
+        cat $testfile
     fi
     eval $(cat $testfile) > tests-out/$testnum.out 2> tests-out/$testnum.err
     echo $? > tests-out/$testnum.rc
@@ -30,11 +30,11 @@ run_test () {
     # post: execute this after the test is done, to clean up
     local postfile=$testdir/$testnum.post
     if [[ -f $postfile ]]; then
-	eval $(cat $postfile)
-	if (( $verbose == 1 )); then
-	    echo -n "post-test: "
-	    cat $postfile
-	fi
+        eval $(cat $postfile)
+        if (( $verbose == 1 )); then
+            echo -n "post-test: "
+            cat $postfile
+        fi
     fi
     return 
 }
@@ -64,9 +64,9 @@ check_test () {
     # option to use cmp instead?
     returnval=$(diff $testdir/$testnum.$filetype tests-out/$testnum.$filetype)
     if (( $? == 0 )); then
-	echo 0
+        echo 0
     else
-	echo 1
+        echo 1
     fi
 }
 
@@ -81,14 +81,14 @@ run_and_check () {
     local failmode=$5
 
     if [[ ! -f $testdir/$testnum.run ]]; then
-	if (( $failmode == 1 )); then
-	    echo "test $testnum does not exist" >&2; exit 1
-	fi
-	exit 0
+        if (( $failmode == 1 )); then
+            echo "test $testnum does not exist" >&2; exit 1
+        fi
+        exit 0
     fi
     if (( $verbose == 1 )); then
-	echo -n -e "running test $testnum: "
-	cat $testdir/$testnum.desc
+        echo -n -e "running test $testnum: "
+        cat $testdir/$testnum.desc
     fi
     run_test $testdir $testnum $verbose
     rccheck=$(check_test $testdir $testnum $contrunning rc)
@@ -96,27 +96,27 @@ run_and_check () {
     errcheck=$(check_test $testdir $testnum $contrunning err)
     othercheck=0
     if [[ -f $testdir/$testnum.other ]]; then
-	othercheck=$(check_test $testdir $testnum $contrunning other)
+        othercheck=$(check_test $testdir $testnum $contrunning other)
     fi
     # echo "results: outcheck:$outcheck errcheck:$errcheck"
     if (( $rccheck == 0 )) && (( $outcheck == 0 )) && (( $errcheck == 0 )) && (( $othercheck == 0 )); then
-	echo -e "test $testnum: ${GREEN}passed${NONE}"
-	if (( $verbose == 1 )); then
-	    echo ""
-	fi
+        echo -e "test $testnum: ${GREEN}passed${NONE}"
+        if (( $verbose == 1 )); then
+            echo ""
+        fi
     else
-	if (( $rccheck == 1 )); then
-	    print_error_message $testnum $contrunning rc
-	fi
-	if (( $outcheck == 1 )); then
-	    print_error_message $testnum $contrunning out
-	fi
-	if (( $errcheck == 1 )); then
-	    print_error_message $testnum $contrunning err
-	fi
-	if (( $othercheck == 1 )); then
-	    print_error_message $testnum $contrunning other
-	fi
+        if (( $rccheck == 1 )); then
+            print_error_message $testnum $contrunning rc
+        fi
+        if (( $outcheck == 1 )); then
+            print_error_message $testnum $contrunning out
+        fi
+        if (( $errcheck == 1 )); then
+            print_error_message $testnum $contrunning err
+        fi
+        if (( $othercheck == 1 )); then
+            print_error_message $testnum $contrunning other
+        fi
     fi
 }
 
@@ -188,13 +188,13 @@ fi
 # do a one-time setup step
 if (( $skippre == 0 )); then
     if [[ -f tests/pre ]]; then
-	echo -e "doing one-time pre-test (use -s to suppress)"
-	source tests/pre
-	if (( $? != 0 )); then
-	    echo "pre-test: failed"
-	    exit 1
-	fi
-	echo ""
+        echo -e "doing one-time pre-test (use -s to suppress)"
+        source tests/pre
+        if (( $? != 0 )); then
+            echo "pre-test: failed"
+            exit 1
+        fi
+        echo ""
     fi
 fi
 
